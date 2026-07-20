@@ -1,11 +1,11 @@
 /**
- * stbi_edit_example.c - ÑİÊ¾ stb_image_edit.h µÄËùÓĞ API
+ * stbi_edit_example.c - æ¼”ç¤º stb_image_edit.h çš„æ‰€æœ‰ API
  *
- * ÊäÈë: input.jpg (ÈÎÒâ RGB Í¼Ïñ)
- * Êä³ö: ¶à¸ö PNG ÎÄ¼ş£¬Õ¹Ê¾²»Í¬´¦ÀíĞ§¹û
+ * è¾“å…¥: input.jpg (ä»»æ„ RGB å›¾åƒ)
+ * è¾“å‡º: å¤šä¸ª PNG æ–‡ä»¶ï¼Œå±•ç¤ºä¸åŒå¤„ç†æ•ˆæœ
  *
- * ±àÒë: gcc -std=c99 -O2 stbi_edit_example.c -lm -o example
- * ÔËĞĞ: ./example
+ * ç¼–è¯‘: gcc -std=c99 -O2 stbi_edit_example.c -lm -o example
+ * è¿è¡Œ: ./example
  */
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* ¸¨Öúº¯Êı£º°²È«±£´æÍ¼Ïñ£¬ÈôÊ§°ÜÔò´òÓ¡´íÎó */
+/* è¾…åŠ©å‡½æ•°ï¼šå®‰å…¨ä¿å­˜å›¾åƒï¼Œè‹¥å¤±è´¥åˆ™æ‰“å°é”™è¯¯ */
 static void save_png(const char *filename, stbi_uc *data, int w, int h, int channels) {
     if (stbi_write_png(filename, w, h, channels, data, w * channels)) {
         printf("  Saved: %s\n", filename);
@@ -30,7 +30,7 @@ static void save_png(const char *filename, stbi_uc *data, int w, int h, int chan
     }
 }
 
-/* ¸¨Öúº¯Êı£º¼ì²é×ª»»½á¹û£¬´òÓ¡´íÎó */
+/* è¾…åŠ©å‡½æ•°ï¼šæ£€æŸ¥è½¬æ¢ç»“æœï¼Œæ‰“å°é”™è¯¯ */
 static void check_result(int success, const char *operation) {
     if (!success) {
         stbie_error err = stbie_get_last_error();
@@ -42,7 +42,7 @@ static void check_result(int success, const char *operation) {
 
 int main(void) {
     int w, h, channels;
-    // Ç¿ÖÆ¼ÓÔØÎª 3 Í¨µÀ RGB
+    // å¼ºåˆ¶åŠ è½½ä¸º 3 é€šé“ RGB
     stbi_uc *rgb = stbi_load("input.jpg", &w, &h, &channels, 3);
     if (!rgb) {
         fprintf(stderr, "Failed to load input.jpg\n");
@@ -51,10 +51,10 @@ int main(void) {
     printf("Loaded: %d x %d, 3 channels (RGB)\n", w, h);
 
     /* ------------------------------------------------
-       1. É«²Ê¿Õ¼ä×ª»»
+       1. è‰²å½©ç©ºé—´è½¬æ¢
        ------------------------------------------------ */
 
-    // 1a. RGB -> »Ò¶È
+    // 1a. RGB -> ç°åº¦
     stbi_uc *gray = (stbi_uc*)malloc(w * h);
     if (gray) {
         int ok = stbie_cvt_color(rgb, w, h, 3, gray, 1, STBIE_COLOR_RGB2GRAY);
@@ -91,10 +91,10 @@ int main(void) {
     }
 
     /* ------------------------------------------------
-       2. ÂË²¨ (Ê¹ÓÃ RGB Ô­Í¼)
+       2. æ»¤æ³¢ (ä½¿ç”¨ RGB åŸå›¾)
        ------------------------------------------------ */
 
-    // 2a. ¾ùÖµÄ£ºı (blur) ksize=5
+    // 2a. å‡å€¼æ¨¡ç³Š (blur) ksize=5
     stbi_uc *blur_out = (stbi_uc*)malloc(w * h * 3);
     if (blur_out) {
         int ok = stbie_blur(rgb, w, h, 3, blur_out, 5, STBIE_BORDER_REPLICATE);
@@ -103,7 +103,7 @@ int main(void) {
         free(blur_out);
     }
 
-    // 2b. ¸ßË¹Ä£ºı sigma=1.5, ksize=5
+    // 2b. é«˜æ–¯æ¨¡ç³Š sigma=1.5, ksize=5
     stbi_uc *gauss_out = (stbi_uc*)malloc(w * h * 3);
     if (gauss_out) {
         int ok = stbie_blur_gaussian(rgb, w, h, 3, gauss_out, 1.5f, 5, STBIE_BORDER_REFLECT);
@@ -112,7 +112,7 @@ int main(void) {
         free(gauss_out);
     }
 
-    // 2c. ÖĞÖµÂË²¨ ksize=3
+    // 2c. ä¸­å€¼æ»¤æ³¢ ksize=3
     stbi_uc *median_out = (stbi_uc*)malloc(w * h * 3);
     if (median_out) {
         int ok = stbie_median_blur(rgb, w, h, 3, median_out, 3, STBIE_BORDER_ZERO);
@@ -122,10 +122,10 @@ int main(void) {
     }
 
     /* ------------------------------------------------
-       3. ±ßÔµ¼ì²â
+       3. è¾¹ç¼˜æ£€æµ‹
        ------------------------------------------------ */
 
-    // 3a. Sobel (×Ô¶¯×ª»Ò¶È£¬Êä³öµ¥Í¨µÀ)
+    // 3a. Sobel (è‡ªåŠ¨è½¬ç°åº¦ï¼Œè¾“å‡ºå•é€šé“)
     stbi_uc *sobel_out = (stbi_uc*)malloc(w * h);
     if (sobel_out) {
         int ok = stbie_sobel(rgb, w, h, 3, sobel_out, STBIE_BORDER_REPLICATE);
@@ -134,7 +134,7 @@ int main(void) {
         free(sobel_out);
     }
 
-    // 3b. Canny (µÍãĞÖµ 50, ¸ßãĞÖµ 150, sigma=1.0, ksize=3)
+    // 3b. Canny (ä½é˜ˆå€¼ 50, é«˜é˜ˆå€¼ 150, sigma=1.0, ksize=3)
     stbi_uc *canny_out = (stbi_uc*)malloc(w * h);
     if (canny_out) {
         int ok = stbie_canny(rgb, w, h, 3, canny_out, 50, 150, 1.0f, 3, STBIE_BORDER_REFLECT);
@@ -144,10 +144,10 @@ int main(void) {
     }
 
     /* ------------------------------------------------
-       4. ¼¸ºÎ±ä»» (Ğı×ª)
+       4. å‡ ä½•å˜æ¢ (æ—‹è½¬)
        ------------------------------------------------ */
 
-    // 4a. Ğı×ª 45¡ã (²Ã¼ôÄ£Ê½)
+    // 4a. æ—‹è½¬ 45Â° (è£å‰ªæ¨¡å¼)
     stbi_uc *rotate_crop = (stbi_uc*)malloc(w * h * 3);
     if (rotate_crop) {
         int out_w = w, out_h = h;
@@ -157,7 +157,7 @@ int main(void) {
         free(rotate_crop);
     }
 
-    // 4b. Ğı×ª 30¡ã (À©Õ¹Ä£Ê½)
+    // 4b. æ—‹è½¬ 30Â° (æ‰©å±•æ¨¡å¼)
     int exp_w, exp_h;
     stbie_rotate_calc_size(w, h, 30.0f, &exp_w, &exp_h);
     stbi_uc *rotate_expand = (stbi_uc*)malloc(exp_w * exp_h * 3);
@@ -169,9 +169,9 @@ int main(void) {
     }
 
     /* ------------------------------------------------
-       5. ²Ã¼ô
+       5. è£å‰ª
        ------------------------------------------------ */
-    // ²Ã¼ôÖĞĞÄ 100x100 ÇøÓò
+    // è£å‰ªä¸­å¿ƒ 100x100 åŒºåŸŸ
     int crop_x = w/2 - 50, crop_y = h/2 - 50;
     stbi_uc *crop_out = (stbi_uc*)malloc(100 * 100 * 3);
     if (crop_out) {
@@ -182,20 +182,20 @@ int main(void) {
     }
 
     /* ------------------------------------------------
-       6. ÏñËØ·ÃÎÊ (get/set) ¨C ÔÚ RGB Ô­Í¼ÉÏĞŞ¸Ä×óÉÏ½Ç 10x10 ÇøÓòÎªºìÉ«
+       6. åƒç´ è®¿é—® (get/set) â€“ åœ¨ RGB åŸå›¾ä¸Šä¿®æ”¹å·¦ä¸Šè§’ 10x10 åŒºåŸŸä¸ºçº¢è‰²
        ------------------------------------------------ */
     stbi_uc *modified = (stbi_uc*)malloc(w * h * 3);
     if (modified) {
-        // ¸´ÖÆÔ­Í¼
+        // å¤åˆ¶åŸå›¾
         memcpy(modified, rgb, w * h * 3);
 
         stbi_uc red[3] = {255, 0, 0};
         stbi_uc pixel[3];
         for (int y = 0; y < 10; ++y) {
             for (int x = 0; x < 10; ++x) {
-                // »ñÈ¡ÏñËØ (½öÓÃÓÚÑİÊ¾)
+                // è·å–åƒç´  (ä»…ç”¨äºæ¼”ç¤º)
                 if (stbie_get_pixel(modified, w, h, 3, x, y, pixel)) {
-                    // ÉèÖÃÎªºìÉ«
+                    // è®¾ç½®ä¸ºçº¢è‰²
                     stbie_set_pixel(modified, w, h, 3, x, y, red);
                 }
             }
@@ -205,7 +205,7 @@ int main(void) {
     }
 
     /* ------------------------------------------------
-       7. ´íÎó´¦ÀíÑİÊ¾£¨¹ÊÒâµ÷ÓÃ´íÎó²ÎÊı£©
+       7. é”™è¯¯å¤„ç†æ¼”ç¤ºï¼ˆæ•…æ„è°ƒç”¨é”™è¯¯å‚æ•°ï¼‰
        ------------------------------------------------ */
     stbi_uc *dummy = (stbi_uc*)malloc(10);
     int ok = stbie_cvt_color(rgb, w, h, 3, dummy, 2, STBIE_COLOR_RGB2GRAY);
@@ -215,7 +215,7 @@ int main(void) {
     }
     free(dummy);
 
-    /* ÊÍ·ÅÔ­Í¼ */
+    /* é‡Šæ”¾åŸå›¾ */
     stbi_image_free(rgb);
     printf("All operations completed.\n");
     return 0;
