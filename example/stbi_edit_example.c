@@ -5,7 +5,7 @@
  * 输出: 多个 PNG 文件，展示不同处理效果
  *
  * 编译: gcc -std=c99 -O2 stbi_edit_example.c -lm -o example
- * 运行: ./example
+ * 运行: ./example// 
  */
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -135,13 +135,22 @@ int main(void) {
     }
 
     // 3b. Canny (低阈值 50, 高阈值 150, sigma=1.0, ksize=3)
+    stbi_uc *canny_gray = malloc(w * h);
+	stbie_cvt_color(rgb, w, h, 3, canny_gray, 1, STBIE_COLOR_RGB2GRAY);
     stbi_uc *canny_out = (stbi_uc*)malloc(w * h);
     if (canny_out) {
-        int ok = stbie_canny(rgb, w, h, 3, canny_out, 50, 150, 1.0f, 3, STBIE_BORDER_REFLECT);
+        int ok = stbie_canny(canny_gray, w, h, 1, canny_out, 50, 150, 1.0f, 3, STBIE_BORDER_REFLECT);
         check_result(ok, "Canny");
         if (ok) save_png("canny.png", canny_out, w, h, 1);
         free(canny_out);
     }
+    
+    stbi_uc *edge = malloc(w * h);
+	if (stbie_canny_with_adaptive_otsu(rgb, w, h, 3, edge,
+                                    1.8f, 5, STBIE_BORDER_REFLECT,
+                                    32, 0.4f)) {
+    	stbi_write_png("canny_adaptive.png", w, h, 1, edge, w);
+	}
 
     /* ------------------------------------------------
        4. 几何变换 (旋转)
