@@ -28,6 +28,7 @@ int main(void) {
         fprintf(stderr, "Failed to initialize display system, error: %d\n", stbid_GetLastError());
         return 1;
     }
+    
 
     // 2. Load image from file using stb_image
     int width, height, channels;
@@ -41,11 +42,17 @@ int main(void) {
     printf("Loaded image: %dx%d, %d channels\n", width, height, channels);
 
     // 3. Show the image (blocking)
+    
     printf("Displaying image. Close the window to continue.\n");
     int ret = stbid_ShowImage(img, width, height, 3, "Image Viewer");
     if (ret != 0) {
         fprintf(stderr, "Failed to display image, error: %d\n", stbid_GetLastError());
     }
+
+#ifdef _WIN32 
+	printf("Testing HDC Draw In Windows.\n");
+    stbid_DrawToHDC(GetDC(NULL),0,0,width,height,img,width,height,channels);
+#endif
 
     // 4. Cleanup
     stbi_image_free(img);
